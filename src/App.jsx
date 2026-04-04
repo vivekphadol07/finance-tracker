@@ -1,52 +1,73 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
-import Dashboard from './components/Dashboard';
-import Navbar from './components/Navbar';
+import Dashboard from './pages/Dashboard';
+import TransactionsPage from './pages/TransactionsPage';
+import BudgetsPage from './pages/BudgetsPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import SettingsPage from './pages/SettingsPage';
+import Navbar from './components/layout/Navbar';
+import Sidebar from './components/layout/Sidebar';
+import { Toaster } from 'sonner';
 import './index.css';
 
-export const App = () => {
-  const [rates, setRates] = useState(null);
-  const [loadingRates, setLoadingRates] = useState(true);
-  const [error, setError] = useState(null);
-
-  const API_KEY = "d19d30e4f174d7cd09bd232c";
-  const BASE = "USD";
+const MainApp = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { theme, activeTab } = useSelector((state) => state.ui);
 
   useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        setLoadingRates(true);
-        const res = await fetch(`https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${BASE}`);
-        if (!res.ok) throw new Error('Network response was not ok');
-        const data = await res.json();
-        setRates(data);
-      } catch (err) {
-        setError('Failed to fetch exchange rates');
-        console.log(err);
-      } finally {
-        setLoadingRates(false);
-      }
-    };
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
-    fetchRates();
-  }, [API_KEY, BASE]);
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const handleSidebarNavigate = () => {
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'transactions':
+        return <TransactionsPage />;
+      case 'budgets':
+        return <BudgetsPage />;
+      case 'analytics':
+        return <AnalyticsPage />;
+      case 'settings':
+        return <SettingsPage />;
+      default:
+        return <Dashboard />;
+    }
+  };
 
   return (
-    <Provider store={store}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 w-full">
-        <Navbar />
-
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {loadingRates ? (
-            <p className="text-center text-gray-700 dark:text-gray-200">Loading exchange rates...</p>
-          ) : error ? (
-            <p className="text-center text-red-500">{error}</p>
-          ) : (
-            <Dashboard rates={rates} loadingRates={loadingRates} error={error} />
-          )}
+    <div className={`min-h-screen flex transition-colors duration-300 ${theme === 'dark' ? 'app-bg-dark text-[#eef4ff]' : 'app-bg-light text-slate-900'} w-full overflow-x-hidden`}>
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} onNavigate={handleSidebarNavigate} />
+      
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
+        <Navbar toggleSidebar={toggleSidebar} />
+        
+        <main className="flex-1 p-3 sm:p-4 md:p-8 overflow-y-auto">
+          {renderContent()}
         </main>
       </div>
+    </div>
+  );
+};
+
+export const App = () => {
+  return (
+    <Provider store={store}>
+      <Toaster position="top-right" richColors closeButton />
+      <MainApp />
     </Provider>
   );
 };

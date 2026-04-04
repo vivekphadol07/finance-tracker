@@ -10,7 +10,11 @@ const budgetsSlice = createSlice({
   reducers: {
     setMonthlyBudget(state, action) {
       const { monthKey, totalBudget, categories } = action.payload;
-      state.monthlyGoals[monthKey] = { totalBudget, categories: categories || {} };
+      const existingCategories = state.monthlyGoals[monthKey]?.categories || {};
+      state.monthlyGoals[monthKey] = {
+        totalBudget,
+        categories: categories ?? existingCategories
+      };
     },
 
     updateCategoryBudget(state, action) {
