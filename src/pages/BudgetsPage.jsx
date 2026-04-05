@@ -41,7 +41,7 @@ const BudgetsPage = () => {
         </div>
 
         <div className="xl:col-span-5 space-y-6">
-          <Card title="Bills & Due-Date Reminders">
+          <Card title="Bills & Due Date Reminders">
             <BillsManager />
           </Card>
 

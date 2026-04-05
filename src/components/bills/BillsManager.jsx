@@ -73,14 +73,14 @@ const BillsManager = () => {
         </p>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
         <input
           type="text"
           value={billName}
           onChange={(e) => setBillName(e.target.value)}
           placeholder="Bill name (e.g. Rent)"
           disabled={role !== 'Admin'}
-          className="md:col-span-2 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-[#1e1e26] bg-white dark:bg-[#0d0d11] text-sm text-slate-900 dark:text-[#f1f4ff] placeholder-slate-400 dark:placeholder-[#8a8fae] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/20 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="md:col-span-5 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-[#1e1e26] bg-white dark:bg-[#0d0d11] text-sm text-slate-900 dark:text-[#f1f4ff] placeholder-slate-400 dark:placeholder-[#8a8fae] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/20 disabled:opacity-60 disabled:cursor-not-allowed"
         />
         <input
           type="number"
@@ -88,14 +88,16 @@ const BillsManager = () => {
           onChange={(e) => setBillAmount(e.target.value)}
           placeholder="Amount"
           disabled={role !== 'Admin'}
-          className="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-[#1e1e26] bg-white dark:bg-[#0d0d11] text-sm text-slate-900 dark:text-[#f1f4ff] placeholder-slate-400 dark:placeholder-[#8a8fae] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/20 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="md:col-span-3 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-[#1e1e26] bg-white dark:bg-[#0d0d11] text-sm text-slate-900 dark:text-[#f1f4ff] placeholder-slate-400 dark:placeholder-[#8a8fae] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/20 disabled:opacity-60 disabled:cursor-not-allowed"
         />
         <input
           type="date"
           value={billDueDate}
           onChange={(e) => setBillDueDate(e.target.value)}
           disabled={role !== 'Admin'}
-          className="px-3 py-2.5 rounded-xl border border-slate-200 dark:border-[#1e1e26] bg-white dark:bg-[#0d0d11] text-sm text-slate-900 dark:text-[#f1f4ff] [color-scheme:light] dark:[color-scheme:dark] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/20 disabled:opacity-60 disabled:cursor-not-allowed"
+          aria-label="Due date"
+          title="Due date"
+          className="md:col-span-4 min-w-[10.5rem] px-3 py-2.5 rounded-xl border border-slate-200 dark:border-[#1e1e26] bg-white dark:bg-[#0d0d11] text-sm text-slate-900 dark:text-[#f1f4ff] [color-scheme:light] dark:[color-scheme:dark] focus:outline-none focus:border-brand-accent/40 focus:ring-1 focus:ring-brand-accent/20 disabled:opacity-60 disabled:cursor-not-allowed"
         />
       </div>
 

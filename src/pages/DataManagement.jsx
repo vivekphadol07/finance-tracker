@@ -4,6 +4,7 @@ import { importTransactions, selectTransactions } from '../redux/Slices/transact
 import { toast } from 'sonner';
 import { Upload, Download } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { downloadBlobWithPrompt } from '../utils/exportUtils';
 
 export const DataManagement = () => {
   const dispatch = useDispatch();
@@ -13,12 +14,15 @@ export const DataManagement = () => {
   const handleExportJSON = () => {
     const dataStr = JSON.stringify(transactions, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'transactions.json';
-    a.click();
-    toast.success('Exported to JSON successfully!');
+
+    const exported = downloadBlobWithPrompt(blob, {
+      defaultFileName: 'transactions.json',
+      promptMessage: 'Enter JSON file name'
+    });
+
+    if (exported) {
+      toast.success('Exported to JSON successfully!');
+    }
   };
 
   const handleExportCSV = () => {
@@ -31,12 +35,15 @@ export const DataManagement = () => {
     const csvContent = `${headers}\n${rows}`;
     
     const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'transactions.csv';
-    a.click();
-    toast.success('Exported to CSV successfully!');
+
+    const exported = downloadBlobWithPrompt(blob, {
+      defaultFileName: 'transactions.csv',
+      promptMessage: 'Enter CSV file name'
+    });
+
+    if (exported) {
+      toast.success('Exported to CSV successfully!');
+    }
   };
 
   const handleImportJSON = (e) => {
@@ -53,7 +60,7 @@ export const DataManagement = () => {
         } else {
           toast.error('Invalid JSON format.');
         }
-      } catch (error) {
+      } catch {
         toast.error('Failed to parse JSON.');
       }
     };
